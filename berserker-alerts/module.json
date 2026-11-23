@@ -1,0 +1,14 @@
+{
+  "name": "berserker-alerts",
+  "author": "itslyn",
+  "description": "Berserker combat alerts and optional tank cooldown announcements",
+  "version": "1.0",
+  "disableAutoUpdate": false,
+  "servers": [
+    "https://raw.githubusercontent.com/itslyn/berserker-alerts/main/"
+  ],
+  "options": {
+    "cliName": "Berserker Alerts",
+    "guiName": "Berserker Alerts"
+  }
+}

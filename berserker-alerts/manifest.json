@@ -1,0 +1,12 @@
+{
+	"files": {
+		"README.md": "4d3fd1220954cbc567b5b486995ccae7230d07c0bc0bb90002f2685874dfe83b",
+		"config.json": {
+			"overwrite": false,
+			"hash": "b43ff662416a8444f9fbffff4b9edd54df3151b0a5ee03674e8ba6c960103421"
+		},
+		"index.js": "0d39cbdb222d313dd3842908b7826ec05d17700006a5deb45c815f925819ce8d",
+		"module.json": "e5fc1263c89bd35da3aec8ccac0b4a4f4b721060adb52020f9631c5efcc9e302",
+		"party-callouts.js": "500a26ca889abf5aef3aebeb920957deca73ea12ff074f0875a5937d9a302c5b"
+	}
+}

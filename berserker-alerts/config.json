@@ -1,0 +1,10 @@
+{
+  "bloodlustSkillId": 60401323,
+  "bloodlustFallbackEnabled": true,
+  "bloodlustFlurrySeconds": 40,
+  "extraFlurryAbnormalityIds": [],
+  "partyBloodlustCooldownSkillId": 213100,
+  "partyEnrageCooldownSkillId": 200200,
+
+  "partyCalloutsEnabled": false
+}
