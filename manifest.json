@@ -1,12 +1,12 @@
 {
 	"files": {
-		"README.md": "ff8d68231ed65a94d3bb27511092a5f8e9610cd53e6acc60fe1875d5ad04023e",
+		"README.md": "2aa7da8215009eaaa7610bf8048c220944ec1939a055e4d639f5e586fc4a106f",
 		"config.json": {
 			"overwrite": false,
 			"hash": "8b54056c67abc23e6c5fc5ec1ccba738465a2f7d0dafaf5ebe65d634fcac992e"
 		},
 		"index.js": "71bd020a3ed47f95ea65dc7544a65587d2d6e48529242c67cc3b0b69255bb527",
-		"module.json": "de473b331d7ba4fbb514c57f8e8b395dcaca309f2791f688ef123851e29f3114",
+		"module.json": "262b7fb7e8c48dc669da9cf1966d149b1f67ebb2b84011ea0a1a7222f0be8427",
 		"party-callouts.js": "500a26ca889abf5aef3aebeb920957deca73ea12ff074f0875a5937d9a302c5b",
 		"screenshots/flurry-3seconds.png": "6402b5e528b23782d1d0e189c3e64b85d9d6a6178b291248e3977c2f6b5490f9",
 		"screenshots/party-announcements.png": "7a8d395742420fdee7909a171673b541c1dcff0c5e6d227e3beddf22e062549d",
