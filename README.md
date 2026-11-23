@@ -53,4 +53,5 @@ Use the commands in the `/8` toolbox chat or pre-fix them with `!`.
 - Place in your mods folder in your TERA Toolbox.
 
 If you have any issues with this, feel free to let me know on Discord: @itslyn
+
 GitHub: https://github.com/itslyn/berserker-alerts
