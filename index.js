@@ -8,6 +8,11 @@ const createPartyCallouts = require('./party-callouts');
 const INTIMIDATION_ID = 401400;
 const PUNISHING_STRIKE_ID = 401500;
 const HAMMERED_ID = 10153142;
+const DEBILITATE_ID = 200302;
+const PUNISHING_OVERRIDE_NAMES = new Map([
+    [HAMMERED_ID, 'Hammered'],
+    [DEBILITATE_ID, 'Debilitate II']
+]);
 const RAGING_FURY_SELF_ID = 91900403;
 const FLURRY_TANK_ID = 400508;
 const FLURRY_DPS_ID = 400502;
@@ -193,17 +198,22 @@ module.exports = function PunishingStrikeAlert(mod) {
         bossDebuffs.delete(bossId);
         return null;
     }
-    // Hammered on the current boss takes priority over Punishing Strike.
-    function bossHasHammered() {
-        if (bossId === null) return false;
-        const until = bossOverrides.get(bossId);
-        if (until === undefined) return false;
-        if (until === Infinity || until > now()) return true;
-        bossOverrides.delete(bossId);
-        return false;
+    // Suppress Punishing Strike while either stronger debuff is on this boss.
+    function activeBossOverride() {
+        if (bossId === null) return null;
+        const active = bossOverrides.get(bossId);
+        if (!active) return null;
+        let found = null;
+        for (const [id, until] of active) {
+            if (until === Infinity || until > now()) {
+                if (!found) found = { id, name: PUNISHING_OVERRIDE_NAMES.get(id) };
+            } else active.delete(id);
+        }
+        if (active.size === 0) bossOverrides.delete(bossId);
+        return found;
     }
     function canPlayVoice(item) {
-        if (item.requireCombat === 'tank') return enabled && combatGraceElapsed() && tankStanceActive() && !bossHasHammered();
+        if (item.requireCombat === 'tank') return enabled && combatGraceElapsed() && tankStanceActive() && !activeBossOverride();
         if (item.requireCombat === 'raging') return canBuffAlert() && tankStanceActive();
         if (item.requireCombat) return canBuffAlert();
         return true;
@@ -289,7 +299,7 @@ module.exports = function PunishingStrikeAlert(mod) {
         const time = now();
         if (time - bossFirstSeenAt < FIRST_BOSS_GRACE_MS) return;
         if (time - bossLastSeenAt > BOSS_STALE_MS) return;
-        if (bossHasHammered()) return; // No Punishing Strike warnings of either kind.
+        if (activeBossOverride()) return; // No Punishing Strike warnings of either kind.
         const debuff = getBossDebuff();
         if (debuff && Number.isFinite(debuff.until) &&
             debuff.until > time && debuff.until - time <= BUFF_NOTICE_MS &&
@@ -479,12 +489,13 @@ module.exports = function PunishingStrikeAlert(mod) {
             observeStancePacket('BEGIN/REFRESH', id, 'S_ABNORMALITY_BEGIN/REFRESH');
             trackOwnBuff('BEGIN', event);
         }
-        if (id === HAMMERED_ID) {
+        if (PUNISHING_OVERRIDE_NAMES.has(id)) {
             const duration = Number(event.duration);
             const until = Number.isFinite(duration) && duration > 0 && duration <= 2147483646
                 ? now() + duration : Infinity;
             const target = String(event.target);
-            bossOverrides.set(target, until);
+            if (!bossOverrides.has(target)) bossOverrides.set(target, new Map());
+            bossOverrides.get(target).set(id, until);
             if (target === bossId) {
                 for (let i = voiceQueue.length - 1; i >= 0; i--) {
                     if (voiceQueue[i].requireCombat === 'tank') voiceQueue.splice(i, 1);
@@ -509,10 +520,14 @@ module.exports = function PunishingStrikeAlert(mod) {
             observeStancePacket('END', id, 'S_ABNORMALITY_END');
             trackOwnBuff('END', event);
         }
-        if (id === HAMMERED_ID) {
+        if (PUNISHING_OVERRIDE_NAMES.has(id)) {
             const target = String(event.target);
-            bossOverrides.delete(target);
-            if (target === bossId) lastWarningAt = 0;
+            const active = bossOverrides.get(target);
+            if (active) {
+                active.delete(id);
+                if (active.size === 0) bossOverrides.delete(target);
+            }
+            if (target === bossId && !activeBossOverride()) lastWarningAt = 0;
             return;
         }
         if (id === PUNISHING_STRIKE_ID) {
@@ -619,7 +634,8 @@ module.exports = function PunishingStrikeAlert(mod) {
         const debuff = !bossId ? 'no tracked boss' : !current ? 'missing (0 stacks)' :
             current.stacks === null ? 'present (unknown stacks)' :
                 `${current.stacks} stack(s)${current.stacks >= REQUIRED_STACKS ? ' (OK)' : ' (needs 2)'}`;
-        mod.command.message(`Alerts: ${enabled ? 'ON' : 'OFF'} | Class: ${me().class || 'unknown'} | Intimidation: ${tankStanceActive() ? 'ON (tank)' : 'OFF (DPS)'} | In combat: ${!!me().inCombat} | Grace: ${combatOk() ? (combatGraceElapsed() ? 'complete' : Math.max(0, (COMBAT_START_GRACE_MS - (combatStartedAt === null ? 0 : now() - combatStartedAt)) / 1000).toFixed(1) + 's remaining') : 'out of combat'} | Punishing Strike: ${bossHasHammered() ? 'SUPPRESSED (Hammered 10153142)' : debuff}`);
+        const override = activeBossOverride();
+        mod.command.message(`Alerts: ${enabled ? 'ON' : 'OFF'} | Class: ${me().class || 'unknown'} | Intimidation: ${tankStanceActive() ? 'ON (tank)' : 'OFF (DPS)'} | In combat: ${!!me().inCombat} | Grace: ${combatOk() ? (combatGraceElapsed() ? 'complete' : Math.max(0, (COMBAT_START_GRACE_MS - (combatStartedAt === null ? 0 : now() - combatStartedAt)) / 1000).toFixed(1) + 's remaining') : 'out of combat'} | Punishing Strike: ${override ? 'SUPPRESSED (' + override.name + ' ' + override.id + ')' : debuff}`);
         buffStatus();
         stanceStatus();
     }

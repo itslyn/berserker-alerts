@@ -5,8 +5,11 @@
 			"overwrite": false,
 			"hash": "8b54056c67abc23e6c5fc5ec1ccba738465a2f7d0dafaf5ebe65d634fcac992e"
 		},
-		"index.js": "0d39cbdb222d313dd3842908b7826ec05d17700006a5deb45c815f925819ce8d",
+		"index.js": "93c698d5c4b556022bf9dc71d13ac005013db16adc29a6d80818267aa3b37267",
 		"module.json": "e5fc1263c89bd35da3aec8ccac0b4a4f4b721060adb52020f9631c5efcc9e302",
-		"party-callouts.js": "500a26ca889abf5aef3aebeb920957deca73ea12ff074f0875a5937d9a302c5b"
+		"party-callouts.js": "500a26ca889abf5aef3aebeb920957deca73ea12ff074f0875a5937d9a302c5b",
+		"screenshots/flurry-3seconds.png": "6402b5e528b23782d1d0e189c3e64b85d9d6a6178b291248e3977c2f6b5490f9",
+		"screenshots/party-announcements.png": "81a8c2f1d57da0e11edc7d19bb1adb650bd8a8afcd9894cb3ef572167f590a00",
+		"screenshots/raging-fury-3seconds.png": "2124a7a184bf30d0f980a9075d52f5eb0aee6c70379f048e1b25797ede9087d7"
 	}
 }
